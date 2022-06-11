@@ -10,9 +10,20 @@ public class Main {
             @Override
             public void run() {
                 new Main().runningAsyn(new CallBack() {
+
                     @Override
-                    public void call() {
-                        System.out.println("Callback called");
+                    public void pushComplete() {
+                        System.out.println("Callback done");
+                    }
+
+                    @Override
+                    public void pushData(String data) {
+                        System.out.println("Callback data:"+data);
+                    }
+
+                    @Override
+                    public void pushError(Exception ex) {
+                        System.out.println("Callback error, Got a exception:" + ex);
                     }
                 });
             }
@@ -27,7 +38,12 @@ public class Main {
     public void runningAsyn(CallBack callBack){
         System.out.println("I am running in separate thread");
         sleep(1000);
-        callBack.call();
+        callBack.pushData("Data 1");
+        callBack.pushData("Data 2");
+        callBack.pushData("Data 3");
+
+        callBack.pushError(new RuntimeException("Opps !"));
+        callBack.pushComplete();
     }
 
     private void sleep(int duration){
